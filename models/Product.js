@@ -30,4 +30,16 @@ var productSchema = new mongoose.Schema(
   }
 );
 
+productSchema.methods.getDisplayName = function () {
+  return this.name + ' - $' + this.price.toFixed(2);
+}
+productSchema.statics.findByCategory = function (category) {
+  return this.find({ category });
+};
+
+productSchema.query.inStock = function () {
+  return this.where({ inStock: true });
+}
+productSchema.index({ price: 1 }); // 1 is for ascending order, -1 for descending
+
 module.exports = mongoose.model('Product', productSchema);
