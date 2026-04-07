@@ -1,7 +1,7 @@
-header
-  nav
-    a(href='/') Home
-    |  |
-    a(href='/about') About
-    |  |
-    a(href='/users') Users
+header(class='border-b border-slate-200 bg-white')
+  nav(class='mx-auto flex max-w-4xl items-center gap-4 px-6 py-4')
+    a(class='text-lg font-semibold text-slate-900', href='/') Node.js Practices
+    .ml-auto.flex.items-center.gap-4
+      a(class='text-slate-600 transition hover:text-indigo-600', href='/') Home
+      a(class='text-slate-600 transition hover:text-indigo-600', href='/about') About
+      a(class='text-slate-600 transition hover:text-indigo-600', href='/users') Users

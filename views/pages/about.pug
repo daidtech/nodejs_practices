@@ -1,5 +1,7 @@
-extends ../layouts/main
+extends ../layout
 
 block content
-  h1 About
-  p This project is for learning Node.js and Express.js.
+  main(class='mx-auto max-w-4xl px-6 py-10')
+    section(class='rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200')
+      h1(class='text-3xl font-bold text-slate-900') About
+      p(class='mt-4 text-slate-600') This project is for learning Node.js, Express.js, Pug, and Tailwind CSS.

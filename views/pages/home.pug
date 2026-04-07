@@ -1,5 +1,11 @@
-extends ../layouts/main
+extends ../layout
 
 block content
-  h1 Welcome
-  p This is the home page built with Express and Pug.
+  main(class='mx-auto max-w-4xl px-6 py-10')
+    section(class='rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200')
+      p(class='text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600') Tailwind CSS
+      h1(class='mt-2 text-4xl font-bold text-slate-900') Welcome
+      p(class='mt-4 text-slate-600') This home page is built with Express, Pug, and Tailwind CSS.
+      .mt-6.flex.flex-wrap.gap-3
+        a(class='rounded-lg bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700', href='/about') About page
+        a(class='rounded-lg border border-slate-300 px-4 py-2 text-slate-700 transition hover:bg-slate-50', href='/users') Users
