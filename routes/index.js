@@ -11,4 +11,9 @@ router.get('/about', function(req, res, next) {
   res.render('pages/about', { title: 'About' });
 });
 
+/* GET products UI page. */
+router.get('/products', function(req, res, next) {
+  res.render('pages/products', { title: 'Products' });
+});
+
 module.exports = router;

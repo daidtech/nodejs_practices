@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+  section(class='rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200')
+    div(class='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between')
+      div
+        p(class='text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600') CRUD Demo
+        h1(class='text-3xl font-bold text-slate-900') Products Manager
+        p(class='mt-2 text-slate-600') Create, edit, and delete products from the browser.
+      a(class='inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50', href='/api/products', target='_blank') Open API JSON
+
+    #status-message(class='mt-4 hidden rounded-lg px-4 py-3 text-sm font-medium')
+
+    div(class='mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]')
+      form#product-form(class='space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4')
+        input#product-id(type='hidden')
+        div
+          label(for='name' class='mb-1 block text-sm font-medium text-slate-700') Product name
+          input#name(class='w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500', type='text', placeholder='Mechanical Keyboard', required)
+        div
+          label(for='price' class='mb-1 block text-sm font-medium text-slate-700') Price
+          input#price(class='w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500', type='number', min='0', step='0.01', placeholder='99.99', required)
+        div
+          label(for='category' class='mb-1 block text-sm font-medium text-slate-700') Category
+          input#category(class='w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500', type='text', placeholder='electronics')
+        div
+          label(for='description' class='mb-1 block text-sm font-medium text-slate-700') Description
+          textarea#description(class='min-h-28 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-indigo-500', placeholder='Short product description')
+        label(class='flex items-center gap-2 text-sm text-slate-700')
+          input#inStock(type='checkbox', checked)
+          span In stock
+        .flex.flex-wrap.gap-3
+          button(class='rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700', type='submit') Save product
+          button#reset-form(class='rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-white', type='button') Clear
+
+      div(class='rounded-xl border border-slate-200 p-4')
+        .mb-4.flex.items-center.justify-between.gap-3
+          h2(class='text-lg font-semibold text-slate-900') Product list
+          button#refresh-products(class='rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50', type='button') Refresh
+        #products-empty(class='hidden rounded-lg border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500') No products yet. Create your first one.
+        #products-list(class='space-y-3')
+          p(class='text-sm text-slate-500') Loading products...
+
+  script(src='/javascripts/products.js')
