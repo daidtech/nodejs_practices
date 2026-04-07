@@ -1,17 +1,54 @@
 var express = require('express');
 var router = express.Router();
+var logger = require('../middleware/logger');
 
 var users = [
   { id: 1, name: 'John', email: 'john@example.com' },
   { id: 2, name: 'Jane', email: 'jane@example.com' },
   { id: 3, name: 'Bob', email: 'bob@example.com' }
 ];
-logger = require('../middleware/logger');
+
+var paidContent = [
+  { id: 1, title: 'Premium article', body: 'This is paid-only content.' },
+  { id: 2, title: 'VIP guide', body: 'Thanks for supporting the platform.' }
+];
+
 router.use(logger);
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.render('users', { title: 'Users', users: users });
+});
+
+/* Demo route behind a paywall. */
+router.get('/a_route_behind_paywall',
+  function(req, res, next) {
+    var hasPaid = req.query.paid === 'true' || req.get('x-has-paid') === 'true';
+
+    req.user = { hasPaid: hasPaid };
+
+    console.log('Checking if user has paid');
+    console.log(req.user);
+
+    if (!req.user.hasPaid) {
+      return next('route');
+    }
+
+    next();
+  },
+  function(req, res) {
+    res.json({
+      access: 'granted',
+      content: paidContent
+    });
+  }
+);
+
+router.get('/a_route_behind_paywall', function(req, res) {
+  res.status(402).json({
+    access: 'denied',
+    message: 'Payment required. Use ?paid=true or send header x-has-paid: true to test access.'
+  });
 });
 
 /* GET user from list. */
@@ -21,10 +58,6 @@ router.get('/:user_id', function(req, res, next) {
     return next();
   }
   res.render('user', { title: user.name, user: user });
-});
-/* GET user from list. */
-router.get('/test', function(req, res, next) {
-  res.render('user', { title: 'Test User', user: { id: 0, name: 'Test User', email: 'test@example.com' } });
 });
 
 module.exports = router;
