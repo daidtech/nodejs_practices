@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "concurrently \"npm:watch:css\" \"nodemon ./bin/www\"",
+    "debug": "DEBUG=nodejs-practices:*,express:* node --inspect ./bin/www",
+    "debug:dev": "concurrently \"npm:watch:css\" \"DEBUG=nodejs-practices:*,express:* nodemon --inspect ./bin/www\"",
     "build:css": "npx tailwindcss -i ./src/tailwind.css -o ./public/stylesheets/style.css --minify",
     "watch:css": "npx tailwindcss -i ./src/tailwind.css -o ./public/stylesheets/style.css --watch"
   },
@@ -13,6 +15,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mongoose": "^8.23.0",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11"
   },

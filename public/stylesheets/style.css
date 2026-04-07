@@ -631,11 +631,6 @@ body {
        columns: 3;
 }
 
-.break-after-auto {
-  -moz-column-break-after: auto;
-       break-after: auto;
-}
-
 .flex-col {
   flex-direction: column;
 }
