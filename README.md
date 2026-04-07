@@ -95,3 +95,29 @@ DELETE /api/products/:id
 ```
 
 > If MongoDB is not connected, the API returns `503` with a helpful message.
+
+## Mongo Console Helper
+
+This project also includes a small MongoDB console helper that auto-loads all models from the `models/` folder into `global`.
+
+### Run it
+
+```bash
+npm run c
+```
+
+### What it does
+- connects to MongoDB using `MONGODB_URI`
+- scans `models/*.js`
+- registers each model on `global`
+- also exposes them as `global.models`
+- Help developers quick test query, action
+### Example usage
+
+```js
+await Product.find()
+await User.find()
+Object.keys(global.models)
+```
+
+So if you add a new file like `models/Order.js`, it will be loaded automatically the next time you run the console.
