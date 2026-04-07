@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "c": "node -r ./scripts/console.js",
     "dev": "concurrently \"npm:watch:css\" \"nodemon ./bin/www\"",
     "debug": "DEBUG=nodejs-practices:*,express:* node --inspect ./bin/www",
     "debug:dev": "concurrently \"npm:watch:css\" \"DEBUG=nodejs-practices:*,express:* nodemon --inspect ./bin/www\"",

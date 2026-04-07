@@ -9,7 +9,7 @@ var logger = require('morgan');
 var connectDB = require('./config/db');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var productsRouter = require('./routes/products');
+var productsRouter = require('./routes/api/products');
 
 var app = express();
 
