@@ -1,0 +1,16 @@
+extends ../layouts/main
+
+block content
+  h1= post.title
+  p by #{post.author?.name || post.author?.email}
+  p= post.content
+  if post.publishedAt
+    p Published at: #{post.publishedAt.toLocaleString()}
+  h2 Comments
+  ul
+    if comments.length
+      each comment in comments
+        li
+          | #{comment.body} — by #{comment.author?.name || comment.author?.email}
+    else
+      li No comments yet.
