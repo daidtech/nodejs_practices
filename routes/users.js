@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var logger = require('../middleware/logger');
+const User = require('../models/User');
 
-var users = [
-  { id: 1, name: 'John', email: 'john@example.com' },
-  { id: 2, name: 'Jane', email: 'jane@example.com' },
-  { id: 3, name: 'Bob', email: 'bob@example.com' }
-];
+// var users = [
+//   { id: 1, name: 'John', email: 'john@example.com' },
+//   { id: 2, name: 'Jane', email: 'jane@example.com' },
+//   { id: 3, name: 'Bob', email: 'bob@example.com' }
+// ];
 
 var paidContent = [
   { id: 1, title: 'Premium article', body: 'This is paid-only content.' },
@@ -16,7 +17,8 @@ var paidContent = [
 router.use(logger);
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
+  let users = await User.find();
   res.render('users', { title: 'Users', users: users });
 });
 
@@ -52,8 +54,8 @@ router.get('/a_route_behind_paywall', function(req, res) {
 });
 
 /* GET user from list. */
-router.get('/:user_id', function(req, res, next) {
-  var user = users.find(function(u) { return u.id === parseInt(req.params.user_id); });
+router.get('/:user_id', async function(req, res, next) {
+  var user = await User.findById(req.params.user_id);
   if (!user) {
     return next();
   }
