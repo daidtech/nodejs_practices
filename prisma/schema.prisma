@@ -8,7 +8,14 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id          Int     @id @default(autoincrement())
+  name        String
+  email       String  @unique
+  passwordHash String
+  role        String  @default("user")
+  active      Boolean @default(false)
+  loginCount  Int     @default(0)
+  age         Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
