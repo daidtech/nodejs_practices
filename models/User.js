@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema(
     active: {
       type: Boolean,
       default: false
+    },
+    loginCount: {
+      type: Number,
+      default: 0
     }
   },
   {
