@@ -3,12 +3,6 @@ var router = express.Router();
 var logger = require('../middleware/logger');
 const User = require('../models/User');
 
-// var users = [
-//   { id: 1, name: 'John', email: 'john@example.com' },
-//   { id: 2, name: 'Jane', email: 'jane@example.com' },
-//   { id: 3, name: 'Bob', email: 'bob@example.com' }
-// ];
-
 var paidContent = [
   { id: 1, title: 'Premium article', body: 'This is paid-only content.' },
   { id: 2, title: 'VIP guide', body: 'Thanks for supporting the platform.' }
