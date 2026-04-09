@@ -1,4 +1,4 @@
-extends layouts/main
+extends ../../layouts/admin
 
 block content
   h1.text-3xl.font-bold.mb-6.text-center Users
@@ -6,7 +6,7 @@ block content
     each user in users
       .bg-white.shadow-md.rounded-lg.p-6.flex.flex-col.justify-between
         .mb-4
-          a.text-xl.font-semibold.text-blue-600(class="hover:underline", href='/users/' + user.id) #{user.name}
+          a.text-xl.font-semibold.text-blue-600(class="hover:underline", href='/admin/users/' + user.id) #{user.name}
         .text-gray-500.text-sm.mb-2
           | Email: #{user.email}
         .text-xs.text-gray-400.mb-2

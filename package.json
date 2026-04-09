@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./dist/bin/www.js",
+    "c": "node -r ./scripts/console.js",
+    "cma": "node -r ./scripts/console-prisma.js",
     "build": "tsc",
     "dev": "concurrently \"npm:watch:css\" \"nodemon --exec ts-node bin/www.ts\"",
     "debug": "DEBUG=nodejs-practices:*,express:* ts-node --inspect bin/www.ts",

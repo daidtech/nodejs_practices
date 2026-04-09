@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body(class='flex min-h-screen flex-col bg-slate-100 text-slate-900')
+    include ../partials/header
+    div(class='flex flex-1')
+      aside(class='hidden w-64 flex-shrink-0 border-r border-slate-200 bg-white px-4 py-6 md:block')
+        include ../admin/partials/sidebar
+      main(class='flex-1 px-8 py-8')
+        // Set max-h-[80vh] and overflow-auto to limit height and allow scrolling
+        div(class='grid gap-4 max-h-[calc(80vh-4rem)] overflow-auto')
+          block content
+    include ../partials/footer

@@ -12,6 +12,7 @@ import authRouter from './routes/auth';
 import attachUserFromJWT from './middleware/authentication';
 import { requireRole } from './middleware/authorization';
 import adminPostsRouter from './routes/admin/posts';
+import adminUsersRouter from './routes/admin/users';
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/admin/posts', requireRole('admin'), adminPostsRouter);
+app.use('/admin/users', requireRole('admin'), adminUsersRouter);
 
 // catch 404 and forward to error handler
 app.use((_req: Request, _res: Response, next: NextFunction) => {
