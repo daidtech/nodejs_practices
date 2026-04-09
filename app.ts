@@ -1,20 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-require('dotenv').config();
+import createError from 'http-errors';
+import express, { Request, Response, NextFunction } from 'express';
+import 'dotenv/config';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import passport from './src/auth/passport';
 
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var passport = require('./src/auth/passport');
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
+import authRouter from './routes/auth';
+import attachUserFromJWT from './middleware/authentication';
+import { requireRole } from './middleware/authorization';
+import adminPostsRouter from './routes/admin/posts';
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var authRouter = require('./routes/auth.js');
-const attachUserFromJWT = require('./middleware/authentication');
-const { requireRole } = require('./middleware/authorization');
+const app = express();
 
-var app = express();
-var adminPostsRouter = require('./routes/admin/posts');
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
@@ -27,7 +27,7 @@ app.use(passport.initialize());
 app.use(attachUserFromJWT);
 
 // Make user available in all views via res.locals
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.user = req.user || null;
   next();
 });
@@ -38,26 +38,25 @@ app.use('/auth', authRouter);
 app.use('/admin/posts', requireRole('admin'), adminPostsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((_req: Request, _res: Response, next: NextFunction) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use((err: createError.HttpError, req: Request, res: Response, _next: NextFunction) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   if (req.originalUrl.startsWith('/api/')) {
-    return res.status(err.status || 500).json({
+    res.status(err.status || 500).json({
       message: err.message,
       error: req.app.get('env') === 'development' ? err : {}
     });
+    return;
   }
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
-module.exports = app;
+export default app;

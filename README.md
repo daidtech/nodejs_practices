@@ -1,6 +1,6 @@
 # Node.js Practices
 
-A server-side rendered web application built with Express, Pug, Tailwind CSS, and Prisma ORM.
+A server-side rendered web application built with **TypeScript**, Express, Pug, Tailwind CSS, and Prisma ORM.
 
 ## Database Setup
 
@@ -8,6 +8,7 @@ See [README-db.md](README-db.md) for Prisma/PostgreSQL setup and Docker instruct
 
 ## Tech Stack
 
+- **Language**: TypeScript
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Template Engine**: Pug
@@ -29,8 +30,12 @@ cp .env.example .env
 # Run Prisma migrations
 npx prisma migrate dev
 
-# Start development server
+# Start development server (uses ts-node, no build step needed)
 npm run dev
+
+# Or build and run production
+npm run build
+npm start
 ```
 
 ## Environment Variables
@@ -43,64 +48,74 @@ npm run dev
 ## Project Structure
 
 ```
-├── app.js                      # Express app setup & middleware
-├── bin/www                     # Server entry point
+├── app.ts                       # Express app setup & middleware
+├── bin/www.ts                   # Server entry point
+├── tsconfig.json                # TypeScript configuration
 ├── middleware/
-│   ├── authentication.js       # Passport JWT — attaches req.user from cookie
-│   ├── authorization.js        # requireAuth & requireRole guards
-│   └── logger.js               # Custom request logger
+│   ├── authentication.ts        # Passport JWT — attaches req.user from cookie
+│   ├── authorization.ts         # requireAuth & requireRole guards
+│   └── logger.ts                # Custom request logger
 ├── prisma/
-│   └── schema.prisma           # Database schema (User, Post, Category, Tag, Profile)
+│   └── schema.prisma            # Database schema (User, Post, Category, Tag, Profile)
 ├── routes/
-│   ├── index.js                # Home & About pages
-│   ├── auth.js                 # Login, Register, Logout (POST/GET)
-│   ├── users.js                # User listing & detail pages
+│   ├── index.ts                 # Home & About pages
+│   ├── auth.ts                  # Login, Register, Logout (POST/GET)
+│   ├── users.ts                 # User listing, detail, profile pages
 │   └── admin/
-│       └── posts.js            # Admin post management (protected)
+│       └── posts.ts             # Admin post management (protected)
 ├── src/
-│   └── auth/
-│       ├── passport.js         # Strategy registration hub
-│       ├── local.strategy.js   # Email + password authentication
-│       └── jwt.strategy.js     # JWT cookie extraction & verification
+│   ├── auth/
+│   │   ├── passport.ts          # Strategy registration hub
+│   │   ├── local.strategy.ts    # Email + password authentication
+│   │   └── jwt.strategy.ts      # JWT cookie extraction & verification
+│   └── types/
+│       └── express.d.ts         # Express.User type augmentation (Prisma User)
 ├── validations/
-│   └── user.js                 # Zod schemas (login, register, userId param)
+│   └── user.ts                  # Zod schemas (login, register, userId param)
+├── scripts/
+│   └── seed.ts                  # Database seeding script
 ├── views/
-│   ├── layouts/main.pug        # Base layout
-│   ├── pages/                  # Home, About
-│   ├── users/                  # Login, Register, Logout, User list/detail
-│   ├── admin/posts/            # Admin views
-│   └── partials/               # Header, Footer, Block
-└── public/
-    └── stylesheets/            # Compiled Tailwind CSS
+│   ├── layouts/main.pug         # Base layout
+│   ├── pages/                   # Home, About
+│   ├── users/                   # Login, Register, Profile, Logout, User list/detail
+│   ├── admin/posts/             # Admin views
+│   └── partials/                # Header, Footer, Block
+├── public/
+│   └── stylesheets/             # Compiled Tailwind CSS
+└── dist/                        # Compiled JS output (gitignored)
 ```
 
 ## Authentication Architecture
 
 ### Flow
 
-1. **Login**: User submits form → Zod validates → Passport Local authenticates (bcrypt) → JWT signed → httpOnly cookie set → redirect to home
-2. **Every request**: `attachUserFromJWT` middleware reads cookie → Passport JWT verifies → `req.user` set → `res.locals.user` available in all views
-3. **Logout**: Cookie cleared → redirect to home
-4. **Register**: Zod validates → check duplicate email → bcrypt hash password → create user → redirect to login
+1. **Register**: User submits form → Zod validates → bcrypt hash → Prisma create → redirect to login
+2. **Login**: User submits form → Zod validates → Passport Local authenticates (bcrypt) → JWT signed → httpOnly cookie set → redirect to home
+3. **Every request**: `attachUserFromJWT` middleware reads cookie → Passport JWT verifies → `req.user` set → `res.locals.user` available in all views
+4. **Profile**: Logged-in user clicks their name in header → `/users/profile` renders profile with account details
+5. **Logout**: Cookie cleared → redirect to home
 
 ### Key Decisions
 
+- **TypeScript**: All source files are `.ts` with strict mode enabled
 - **No sessions**: Fully stateless via JWT in httpOnly cookies
 - **No client-side JS for auth**: All flows use standard form POST and server redirects
 - **Cookie-based JWT**: Token stored in httpOnly cookie (not Authorization header or localStorage) for security
-- **Role-based access**: Admin routes protected with `requireRole('admin')` middleware in `app.js`
+- **Role-based access**: Admin routes protected with `requireRole('admin')` middleware in `app.ts`
 - **Validation before auth**: Zod schemas validate input before Passport processes it
 
 ### User Roles
 
-- `user` (default) — can access public pages
-- `admin` — can access `/admin/*` routes
+- `user` (default) — can access public pages and profile
+- `admin` — can additionally access `/admin/*` routes
 
 ## Scripts
 
 | Script | Description |
 |---|---|
-| `npm run dev` | Start dev server with CSS watch & nodemon |
-| `npm start` | Start production server |
+| `npm run dev` | Start dev server with ts-node + CSS watch + nodemon |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm start` | Start production server from `dist/` |
+| `npm run seed` | Seed database with sample data |
 | `npm run build:css` | Build minified Tailwind CSS |
 | `npm run debug:dev` | Start with debug logging & inspector |

@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
+import express, { Request, Response, NextFunction } from 'express';
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
+const router = express.Router();
 
 // GET /admin/posts - render all posts for admin
-router.get('/', async (req, res, next) => {
+router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await prisma.post.findMany({
       include: {
@@ -20,4 +21,4 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;

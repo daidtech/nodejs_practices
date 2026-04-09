@@ -1,0 +1,35 @@
+extends ../layouts/main
+
+block content
+  div(class='mx-auto max-w-2xl')
+    div(class='rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200')
+      div(class='flex items-center gap-6 mb-6')
+        div(class='flex h-20 w-20 items-center justify-center rounded-full bg-indigo-100 text-3xl font-bold text-indigo-600')
+          | #{user.name.charAt(0).toUpperCase()}
+        div
+          h1(class='text-2xl font-bold text-slate-900') #{user.name}
+          p(class='text-sm text-slate-500') #{user.email}
+          span(class='mt-1 inline-block rounded-full px-3 py-0.5 text-xs font-medium ' + (user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'))
+            | #{user.role}
+
+      div(class='border-t border-slate-200 pt-6')
+        h2(class='text-lg font-semibold text-slate-800 mb-4') Account Details
+        div(class='grid grid-cols-1 sm:grid-cols-2 gap-4')
+          div(class='rounded-lg bg-slate-50 p-4')
+            p(class='text-xs font-medium uppercase text-slate-400') Status
+            p(class='text-sm font-semibold ' + (user.active ? 'text-green-600' : 'text-red-600'))
+              | #{user.active ? 'Active' : 'Inactive'}
+          div(class='rounded-lg bg-slate-50 p-4')
+            p(class='text-xs font-medium uppercase text-slate-400') Login Count
+            p(class='text-sm font-semibold text-slate-700') #{user.loginCount}
+          div(class='rounded-lg bg-slate-50 p-4')
+            p(class='text-xs font-medium uppercase text-slate-400') Age
+            p(class='text-sm font-semibold text-slate-700') #{user.age || 'Not set'}
+          div(class='rounded-lg bg-slate-50 p-4')
+            p(class='text-xs font-medium uppercase text-slate-400') Member Since
+            p(class='text-sm font-semibold text-slate-700') #{user.createdAt.toLocaleDateString()}
+
+      if profile
+        div(class='border-t border-slate-200 pt-6 mt-6')
+          h2(class='text-lg font-semibold text-slate-800 mb-2') Profile
+          p(class='text-slate-600') #{profile.bio}

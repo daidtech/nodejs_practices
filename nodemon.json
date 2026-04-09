@@ -1,0 +1,5 @@
+{
+  "watch": ["app.ts", "bin", "routes", "middleware", "src", "validations"],
+  "ext": "ts,pug",
+  "exec": "ts-node bin/www.ts"
+}

@@ -1,9 +1,8 @@
-// scripts/seed.js
-// Seed data using Prisma
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
-async function seed() {
+async function seed(): Promise<void> {
   // Clean up existing data (order matters due to FKs)
   await prisma.tag.deleteMany({});
   await prisma.post.deleteMany({});
@@ -76,7 +75,6 @@ async function seed() {
       user: { connect: { id: dave.id } },
     },
   });
-  // Carol has no profile
 
   // Categories
   const tech = await prisma.category.create({ data: { description: 'Tech' } });
@@ -147,10 +145,11 @@ async function seed() {
       content: 'Just some thoughts.',
       published: false,
       author: { connect: { id: alice.id } },
-      // No category
-      // No tags
     },
   });
+
+  // Suppress unused variable warnings
+  void carol;
 
   console.log('Seed data created.');
   await prisma.$disconnect();
