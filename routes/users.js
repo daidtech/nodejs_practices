@@ -30,4 +30,26 @@ router.get('/:user_id', async function(req, res, next) {
   }
 });
 
+
+// Render login page
+router.get('/login', (req, res) => {
+  res.render('users/login');
+});
+
+// Render register page
+router.get('/register', (req, res) => {
+  res.render('users/register');
+});
+
+// Render logout page (optional: can redirect or show a message)
+router.get('/logout', (req, res) => {
+  res.render('users/logout');
+});
+
+// Render password change page
+router.get('/password-change', (req, res) => {
+  res.render('users/password-change');
+});
+
+
 module.exports = router;

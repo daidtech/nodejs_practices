@@ -1,0 +1,33 @@
+extends ../../layouts/main
+
+block content
+  .container.mx-auto.mt-10.flex.gap-8
+    //- Sidebar partial
+    aside(class="w-1/4 hidden md:block")
+      include sidebar
+    //- Main blog post list
+    .flex-1(class="flex-1")
+      h1(class="text-3xl font-extrabold mb-8 text-slate-900 flex items-center gap-2")
+        i(class="fa fa-newspaper text-indigo-600")
+        | Blog Posts
+      if posts && posts.length
+        .grid(class="gap-6")
+          each post in posts
+            article(class="bg-white p-6 rounded-xl shadow-md flex flex-col gap-2 transition hover:shadow-lg")
+              h2(class="text-2xl font-bold text-indigo-700 mb-1")= post.title
+              if post.content
+                p(class="text-slate-700 mb-2")= post.content.length > 180 ? post.content.substring(0, 180) + '...' : post.content
+              .flex(class="flex-wrap gap-2 text-xs mb-2")
+                if post.category
+                  span(class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded") #{post.category.description}
+                if post.tags && post.tags.length
+                  each tag in post.tags
+                    span(class="bg-slate-200 text-slate-700 px-2 py-1 rounded") #{tag.name}
+              .flex(class="items-center gap-4 text-slate-500 text-sm")
+                span Published:
+                  strong= post.published ? 'Yes' : 'No'
+                if post.author
+                  span Author: #{post.author.name}
+                span= new Date(post.createdAt).toLocaleDateString()
+      else
+        p(class="text-slate-500") No posts found.

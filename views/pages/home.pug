@@ -1,21 +1,23 @@
 extends ../layouts/main
 
 block content
-  main(class='mb-4')
-    section(class='rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200')
-      p(class='text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600') Tailwind CSS
-      h1(class='mt-2 text-4xl font-bold text-slate-900') Welcome
-      p(class='mt-4 text-slate-600') This home page is built with Express, Pug, and Tailwind CSS.
-      .mt-6.flex.flex-wrap.gap-3
-        a(class='rounded-lg bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700', href='/about') About page
-        a(class='rounded-lg border border-slate-300 px-4 py-2 text-slate-700 transition hover:bg-slate-50', href='/users') Users
-  .columns-3
-    .block.color-gray-100.bg-gray-300.p-4.mb-4.rounded-lg.shadow-md
-      h2(class='text-lg font-semibold text-gray-900') Node.js
-      p(class='mt-2 text-gray-700') A JavaScript runtime built on Chrome's V8 JavaScript engine.
-    .block.color-gray-100.bg-gray-300.p-4.mb-4.rounded-lg.shadow-md
-      h2(class='text-lg font-semibold text-gray-900') Express.js
-      p(class='mt-2 text-gray-700') A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
-    .block.color-gray-100.bg-gray-300.p-4.mb-4.rounded-lg.shadow-md
-      h2(class='text-lg font-semibold text-gray-900') Pug
-      p(class='mt-2 text-gray-700') A high-performance template engine heavily influenced by Haml and implemented with JavaScript for Node.js and browsers.
+  main(class='mb-8')
+    section(class='rounded-2xl bg-gradient-to-br from-indigo-50 to-white p-10 shadow-lg ring-1 ring-slate-200 flex flex-col items-center text-center')
+      p(class='text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600 mb-2') Tailwind CSS
+      h1(class='text-5xl font-extrabold text-slate-900 mb-4 drop-shadow') Welcome to Node.js Practices
+      p(class='mb-6 text-lg text-slate-600 max-w-xl')
+        | This home page is built with Express, Pug, and Tailwind CSS. Explore modern Node.js web development with beautiful UI and best practices.
+      .flex.flex-wrap.gap-4.justify-center
+        a(class='rounded-lg bg-indigo-600 px-6 py-2 text-white font-semibold shadow transition hover:bg-indigo-700', href='/about') About
+        a(class='rounded-lg bg-green-500 px-6 py-2 text-white font-semibold shadow transition hover:bg-green-600', href='/users/login') Login
+
+  section(class='grid grid-cols-1 md:grid-cols-3 gap-6 mt-12')
+    .block.bg-gradient-to-br.from-gray-100.to-gray-200.p-6.rounded-xl.shadow-md.flex.flex-col.items-center
+      h2(class='text-xl font-bold text-indigo-700 mb-2') Node.js
+      p(class='text-gray-700 text-center') A JavaScript runtime built on Chrome's V8 JavaScript engine.
+    .block.bg-gradient-to-br.from-gray-100.to-gray-200.p-6.rounded-xl.shadow-md.flex.flex-col.items-center
+      h2(class='text-xl font-bold text-indigo-700 mb-2') Express.js
+      p(class='text-gray-700 text-center') A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+    .block.bg-gradient-to-br.from-gray-100.to-gray-200.p-6.rounded-xl.shadow-md.flex.flex-col.items-center
+      h2(class='text-xl font-bold text-indigo-700 mb-2') Pug
+      p(class='text-gray-700 text-center') A high-performance template engine heavily influenced by Haml and implemented with JavaScript for Node.js and browsers.
