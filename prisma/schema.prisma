@@ -8,30 +8,49 @@ datasource db {
 }
 
 model User {
-  id          Int     @id @default(autoincrement())
-  name        String
-  email       String  @unique
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
   passwordHash String
-  role        String  @default("user")
-  active      Boolean @default(false)
-  loginCount  Int     @default(0)
-  age         Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  posts       Post[]
+  role         String   @default("user")
+  active       Boolean  @default(false)
+  loginCount   Int      @default(0)
+  age          Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  posts        Post[]
+  profile      Profile?              // 1:1
+}
+
+model Profile {                       // 1:1 with User
+  id     Int    @id @default(autoincrement())
+  bio    String
+  avatar String?
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int    @unique
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  title       String
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId  Int?
-  authorId    Int
+  id         Int       @id @default(autoincrement())
+  title      String
+  content    String?
+  published  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   Int
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId Int?
+  tags       Tag[]                    // M:N (implicit)
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   description String
   posts       Post[]
+}
+
+model Tag {                           // M:N with Post
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[]
 }
