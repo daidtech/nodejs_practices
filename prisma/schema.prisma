@@ -18,4 +18,20 @@ model User {
   age         Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  posts       Post[]
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  Int?
+  authorId    Int
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  description String
+  posts       Post[]
 }
