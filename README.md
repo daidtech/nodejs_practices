@@ -6,6 +6,42 @@ A server-side rendered web application built with **TypeScript**, Express, Pug, 
 
 See [README-db.md](README-db.md) for Prisma/PostgreSQL setup and Docker instructions.
 
+## Docker Setup
+
+1. Copy `.env.example` to `.env` and set your `JWT_SECRET` (and any other secrets).
+2. Run:
+
+```bash
+docker-compose up --build
+```
+
+- This will start both the PostgreSQL database and the Node.js app.
+- The app will be available at http://localhost:3000
+- Database is available at port 5432 (default user/pass: postgres/postgres, db: nodejs_practices)
+- Prisma migrations will run automatically on startup.
+
+**That's it!**
+
+## Running Locally (without Docker)
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy `.env.example` to `.env` and set your secrets.
+3. Start PostgreSQL locally (or use Docker just for the DB):
+   - Default connection: `postgres://postgres:postgres@localhost:5432/nodejs_practices`
+4. Run Prisma migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+5. Start the dev server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
 ## Project Screenshots:
 
 <div style="display: flex; gap: 16px; align-items: flex-start; justify-content: flex-start; overflow-x: auto;">

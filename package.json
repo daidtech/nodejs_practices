@@ -9,6 +9,7 @@
     "build": "tsc",
     "dev": "concurrently \"npm:watch:css\" \"nodemon --exec ts-node bin/www.ts\"",
     "debug": "DEBUG=nodejs-practices:*,express:* ts-node --inspect bin/www.ts",
+    "migrate-and-start": "npx prisma generate && npx prisma migrate deploy && npm run dev",
     "debug:dev": "concurrently \"npm:watch:css\" \"DEBUG=nodejs-practices:*,express:* nodemon --exec ts-node --inspect bin/www.ts\"",
     "build:css": "npx tailwindcss -i ./src/tailwind.css -o ./public/stylesheets/style.css --minify",
     "watch:css": "npx tailwindcss -i ./src/tailwind.css -o ./public/stylesheets/style.css --watch",
