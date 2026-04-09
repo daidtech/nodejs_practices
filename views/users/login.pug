@@ -1,0 +1,23 @@
+extends ../layouts/main
+
+block content
+  .mx-auto.max-w-md.mt-10
+    h1.text-2xl.font-bold.mb-4 Login
+    form(method="post" action="/auth/login")
+      .mb-4
+        label.block.mb-1(for="email") Email
+        input#email(type="email" name="email" required class="w-full border rounded px-3 py-2")
+      .mb-4
+        label.block.mb-1(for="password") Password
+        input#password(type="password" name="password" required class="w-full border rounded px-3 py-2")
+      button(type="submit" class="bg-blue-600 text-white px-4 py-2 rounded") Login
+    if error
+      p(class='mt-4 text-red-600') #{error}
+    if errors
+      ul(class='mt-4 text-red-600')
+        each msgs, field in errors
+          each msg in msgs
+            li #{field}: #{msg}
+    p.mt-4
+      | Don't have an account?
+      a.text-blue-600(href="/users/register")  Register
