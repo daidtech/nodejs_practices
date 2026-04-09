@@ -2,52 +2,64 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const express = require('express');
-const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const { registerSchema, loginSchema } = require('../validations/user');
 
-// Login route — uses Local strategy
-router.post('/login',
-  passport.authenticate('local', { session: false }),
-  (req, res) => {
-    // req.user is set by the strategy
+// Login route — validates, authenticates, sets cookie, redirects
+router.post('/login', async (req, res, next) => {
+  try {
+    const result = loginSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.render('users/login', { errors: result.error.flatten().fieldErrors });
+    }
+    const { email, password } = result.data;
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.render('users/login', { error: 'Invalid email or password.' });
+    }
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) {
+      return res.render('users/login', { error: 'Invalid email or password.' });
+    }
     const token = jwt.sign(
-      { sub: req.user.id, role: req.user.role },
+      { sub: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    res.render('/', { token, user: { id: req.user.id, name: req.user.name } });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    res.redirect('/');
+  } catch (err) {
+    next(err);
   }
-);
-
-// Protected route — uses JWT strategy
-router.get('/me',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.json(req.user);
-  }
-);
+});
 
 // Register route
 router.post('/register', async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required.' });
+    const result = registerSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.render('users/register', { errors: result.error.flatten().fieldErrors });
     }
-    // Check if user already exists
+    const { name, email, password } = result.data;
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return res.status(409).json({ message: 'Email already registered.' });
+      return res.render('users/register', { error: 'Email already registered.' });
     }
     const passwordHash = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: { name, email, passwordHash, active: true }
     });
-    res.render('users/login', { id: user.id, name: user.name, email: user.email });
+    res.redirect('/users/login');
   } catch (err) {
     next(err);
   }
+});
+
+// Logout route — clears cookie, redirects
+router.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
 });
 
 

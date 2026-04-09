@@ -3,6 +3,7 @@ var router = express.Router();
 var logger = require('../middleware/logger');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { userIdParamSchema } = require('../validations/user');
 
 router.use(logger);
 
@@ -17,19 +18,20 @@ router.get('/', async function(req, res, next) {
 });
 
 /* GET user from list. */
-router.get('/:user_id', async function(req, res, next) {
+router.get('/:user_id(\\d+)', async function(req, res, next) {
   try {
-    // Prisma expects integer id by default; parse if needed
-    const userId = parseInt(req.params.user_id, 10);
-    if (isNaN(userId)) return next();
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    console.log('Received user_id param:', req.params.user_id);
+    const result = userIdParamSchema.safeParse(req.params);
+    if (!result.success) {
+      return res.status(400).json({ errors: result.error.flatten().fieldErrors });
+    }
+    const user = await prisma.user.findUnique({ where: { id: result.data.user_id } });
     if (!user) return next();
     res.render('user', { title: user.name, user: user });
   } catch (err) {
     next(err);
   }
 });
-
 
 // Render login page
 router.get('/login', (req, res) => {

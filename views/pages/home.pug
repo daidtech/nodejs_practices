@@ -7,9 +7,14 @@ block content
       h1(class='text-5xl font-extrabold text-slate-900 mb-4 drop-shadow') Welcome to Node.js Practices
       p(class='mb-6 text-lg text-slate-600 max-w-xl')
         | This home page is built with Express, Pug, and Tailwind CSS. Explore modern Node.js web development with beautiful UI and best practices.
-      .flex.flex-wrap.gap-4.justify-center
-        a(class='rounded-lg bg-indigo-600 px-6 py-2 text-white font-semibold shadow transition hover:bg-indigo-700', href='/about') About
-        a(class='rounded-lg bg-green-500 px-6 py-2 text-white font-semibold shadow transition hover:bg-green-600', href='/users/login') Login
+      if user && user.name
+        span(class='text-lg font-semibold text-green-700 mb-4') Hi, #{user.name}!
+        a(class='rounded-lg bg-red-500 px-4 py-2 text-white font-semibold shadow transition hover:bg-red-600 ml-4', href='/auth/logout') Logout
+      else
+        .flex.flex-wrap.gap-4.justify-center
+          a(class='rounded-lg bg-indigo-600 px-6 py-2 text-white font-semibold shadow transition hover:bg-indigo-700', href='/about') About
+          a(class='rounded-lg bg-green-500 px-6 py-2 text-white font-semibold shadow transition hover:bg-green-600', href='/users/login') Login
+          a(class='rounded-lg bg-gray-500 px-6 py-2 text-white font-semibold shadow transition hover:bg-gray-600', href='/users/register') Register
 
   section(class='grid grid-cols-1 md:grid-cols-3 gap-6 mt-12')
     .block.bg-gradient-to-br.from-gray-100.to-gray-200.p-6.rounded-xl.shadow-md.flex.flex-col.items-center
