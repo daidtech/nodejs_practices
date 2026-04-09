@@ -6,6 +6,23 @@ A server-side rendered web application built with **TypeScript**, Express, Pug, 
 
 See [README-db.md](README-db.md) for Prisma/PostgreSQL setup and Docker instructions.
 
+## Project Screenshots:
+
+<div style="display: flex; gap: 16px; align-items: flex-start; justify-content: flex-start; overflow-x: auto;">
+	<figure style="margin:0; text-align:center;">
+		<img src="./public/images/home_page.png" alt="Home Page" style="max-width:300px; border-radius:12px; box-shadow:0 2px 8px #0001;">
+		<figcaption>Home page</figcaption>
+	</figure>
+	<figure style="margin:0; text-align:center;">
+		<img src="./public/images/profile.png" alt="Profile" style="max-width:300px; border-radius:12px; box-shadow:0 2px 8px #0001;">
+		<figcaption>Profile</figcaption>
+	</figure>
+	<figure style="margin:0; text-align:center;">
+		<img src="./public/images/admin.png" alt="Admin" style="max-width:300px; border-radius:12px; box-shadow:0 2px 8px #0001;">
+		<figcaption>Admin</figcaption>
+	</figure>
+</div>
+
 ## Tech Stack
 
 - **Language**: TypeScript
