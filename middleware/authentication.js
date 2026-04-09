@@ -1,24 +1,13 @@
-// middleware/authentication.js
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const passport = require('../src/auth/passport');
 
-// Middleware to attach user from JWT cookie to req.user
+// Silently attach req.user from JWT cookie on every request.
+// If no token or invalid token, req.user stays undefined — no error, no redirect.
 function attachUserFromJWT(req, res, next) {
-  const token = req.cookies && req.cookies.token;
-  if (!token) return next();
-
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    prisma.user.findUnique({ where: { id: payload.sub } })
-      .then(user => {
-        if (user) req.user = user;
-        next();
-      })
-      .catch(() => next());
-  } catch {
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    if (err) return next(err);
+    if (user) req.user = user;
     next();
-  }
+  })(req, res, next);
 }
 
 module.exports = attachUserFromJWT;

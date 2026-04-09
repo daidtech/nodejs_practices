@@ -5,12 +5,13 @@ require('dotenv').config();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var passport = require('./src/auth/passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth.js');
 const attachUserFromJWT = require('./middleware/authentication');
+const { requireRole } = require('./middleware/authorization');
 
 var app = express();
 var adminPostsRouter = require('./routes/admin/posts');
@@ -22,11 +23,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
 app.use(attachUserFromJWT);
+
+// Make user available in all views via res.locals
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
-app.use('/admin/posts', adminPostsRouter);
+app.use('/admin/posts', requireRole('admin'), adminPostsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

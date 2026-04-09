@@ -1,37 +1,40 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
-const express = require('express');
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const passport = require('../src/auth/passport');
 const router = express.Router();
 const { registerSchema, loginSchema } = require('../validations/user');
 
-// Login route — validates, authenticates, sets cookie, redirects
-router.post('/login', async (req, res, next) => {
-  try {
-    const result = loginSchema.safeParse(req.body);
-    if (!result.success) {
-      return res.render('users/login', { errors: result.error.flatten().fieldErrors });
-    }
-    const { email, password } = result.data;
-    const user = await prisma.user.findUnique({ where: { email } });
+// Login: Zod validation first, then Passport Local
+router.post('/login', (req, res, next) => {
+  const result = loginSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.render('users/login', { errors: result.error.flatten().fieldErrors });
+  }
+
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err) return next(err);
     if (!user) {
-      return res.render('users/login', { error: 'Invalid email or password.' });
+      return res.render('users/login', { error: info?.message || 'Invalid email or password.' });
     }
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) {
-      return res.render('users/login', { error: 'Invalid email or password.' });
-    }
+
     const token = jwt.sign(
       { sub: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+
+    // Increment loginCount (fire-and-forget)
+    prisma.user.update({
+      where: { id: user.id },
+      data: { loginCount: { increment: 1 } }
+    }).catch(() => {});
+
     res.redirect('/');
-  } catch (err) {
-    next(err);
-  }
+  })(req, res, next);
 });
 
 // Register route
@@ -56,11 +59,10 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-// Logout route — clears cookie, redirects
+// Logout: clear cookie and redirect
 router.get('/logout', (req, res) => {
   res.clearCookie('token');
   res.redirect('/');
 });
-
 
 module.exports = router;

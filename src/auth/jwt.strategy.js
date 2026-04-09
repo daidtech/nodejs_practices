@@ -1,11 +1,15 @@
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
-const passport = require('passport');
+const { Strategy: JwtStrategy } = require('passport-jwt');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-passport.use(new JwtStrategy(
+// Read JWT from httpOnly cookie named "token"
+function cookieExtractor(req) {
+  return (req && req.cookies) ? req.cookies.token : null;
+}
+
+const jwtStrategy = new JwtStrategy(
   {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: cookieExtractor,
     secretOrKey: process.env.JWT_SECRET,
   },
   async (payload, done) => {
@@ -17,4 +21,6 @@ passport.use(new JwtStrategy(
       return done(err);
     }
   }
-));
+);
+
+module.exports = jwtStrategy;

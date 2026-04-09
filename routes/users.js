@@ -20,7 +20,6 @@ router.get('/', async function(req, res, next) {
 /* GET user from list. */
 router.get('/:user_id(\\d+)', async function(req, res, next) {
   try {
-    console.log('Received user_id param:', req.params.user_id);
     const result = userIdParamSchema.safeParse(req.params);
     if (!result.success) {
       return res.status(400).json({ errors: result.error.flatten().fieldErrors });
